@@ -1,0 +1,13 @@
+hubot:
+  build: .
+  links:
+   - redis
+  environment:
+    REDIS_URL: redis://redis_1:6379
+    HUBOT_SLACK_TEAM: docker
+    HUBOT_SLACK_BOTNAME: devbot
+    HUBOT_SLACK_TOKEN:
+  volumes:
+   - .:/code
+redis:
+  image: redis
