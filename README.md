@@ -10,7 +10,7 @@ This version is designed to be deployed on [Heroku][heroku]. This README was gen
 
 You can test your hubot by running the following.
 
-    % bin/hubot
+    % fig run hubot
 
 You'll see some start up output about where your scripts come from and a
 prompt.
