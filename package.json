@@ -25,7 +25,7 @@
     "hubot-irc": "^0.2.7",
     "hubot-scripts": ">= 2.5.0 < 3.0.0",
     "hubot-slack": "^2.1.1",
-    "hubot-standup": "git+https://github.com/bfirsh/hubot-standup.git#external-scripts"
+    "hubot-standup": "git+https://github.com/bfirsh/hubot-standup.git#6278c8c040cc8e22e25c08314e30a1954364a7f2"
   },
   "engines": {
     "node": ">= 0.8.x",
