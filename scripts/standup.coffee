@@ -44,7 +44,7 @@ module.exports = (robot) ->
 
   robot.respond /next$/i, (msg) ->
     standup = robot.brain.data.standup?[msg.message.user.room]
-    return if not standup
+    return if not standup or not standup.started
     nextPerson msg
 
   robot.respond /add me$/i, (msg) ->
