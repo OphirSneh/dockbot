@@ -53,7 +53,7 @@ module.exports = (robot) ->
     standup = robot.brain.data.standup?[msg.message.user.room]
     if user not in standup.remaining
       standup.remaining.push user
-    msg.send "#{user}: You're in!"
+    msg.send "#{user.name}: You're in!"
 
   startStandup = (msg) ->
     return if not robot.brain.data.standup?[msg.message.user.room]
