@@ -14,17 +14,17 @@
 
 module.exports = (robot) ->
   robot.hear /.+/, (msg) ->
-    standup = robot.brain.data.standup?[msg.message.user.room]
+    standup = robot.brain.data.standup?[msg.message.room]
     user = msg.message.user
     if standup and not standup.started and user not in standup.remaining
       standup.remaining.push msg.message.user
 
   robot.respond /(?:cancel|stop) standup *$/i, (msg) ->
-    delete robot.brain.data.standup?[msg.message.user.room]
+    delete robot.brain.data.standup?[msg.message.room]
     msg.send "Standup cancelled"
 
   robot.respond /(start )?standup$/i, (msg) ->
-    room  = msg.message.user.room
+    room  = msg.message.room
     if robot.brain.data.standup?[room]
       msg.send "The standup for ##{room} is in progress! Cancel it first with 'cancel standup'"
       return
@@ -43,21 +43,21 @@ module.exports = (robot) ->
     , 60000
 
   robot.respond /next$/i, (msg) ->
-    standup = robot.brain.data.standup?[msg.message.user.room]
+    standup = robot.brain.data.standup?[msg.message.room]
     return if not standup or not standup.started
     nextPerson msg
 
   robot.respond /add me$/i, (msg) ->
-    return if not robot.brain.data.standup?[msg.message.user.room]
+    return if not robot.brain.data.standup?[msg.message.room]
     user = msg.message.user
-    standup = robot.brain.data.standup?[msg.message.user.room]
+    standup = robot.brain.data.standup?[msg.message.room]
     if user not in standup.remaining
       standup.remaining.push user
     msg.send "#{user.name}: You're in!"
 
   startStandup = (msg) ->
-    return if not robot.brain.data.standup?[msg.message.user.room]
-    room  = msg.message.user.room
+    return if not robot.brain.data.standup?[msg.message.room]
+    room  = msg.message.room
     standup = robot.brain.data.standup[room]
     standup.started = true
     standup.start = new Date().getTime()
@@ -66,7 +66,7 @@ module.exports = (robot) ->
     nextPerson msg
 
   nextPerson = (msg) ->
-    room = msg.message.user.room
+    room = msg.message.room
     standup = robot.brain.data.standup[room]
     if standup.remaining.length == 0
       howlong = calcMinutes(new Date().getTime() - standup.start)
