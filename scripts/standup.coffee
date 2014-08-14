@@ -36,7 +36,7 @@ module.exports = (robot) ->
       started: false,
     }
 
-    msg.send "<!channel> Please say something to be part of the standup (starting in 60 seconds)"
+    msg.send "<!channel> Starting a standup in 60 seconds! Please say something to join."
 
     setTimeout ->
       startStandup msg
