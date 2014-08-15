@@ -1,1 +1,1 @@
-web: bin/hubot -a irc -n dockbot
+web: bin/hubot -a slack -n dockbot
