@@ -53,7 +53,7 @@ module.exports = (robot) ->
     standup = robot.brain.data.standup?[msg.message.room]
     if user not in standup.remaining
       standup.remaining.push user
-    msg.send "#{user.name}: You're in!"
+    msg.send "@#{user.name}: You're in!"
 
   startStandup = (msg) ->
     return if not robot.brain.data.standup?[msg.message.room]
@@ -61,7 +61,7 @@ module.exports = (robot) ->
     standup = robot.brain.data.standup[room]
     standup.started = true
     standup.start = new Date().getTime()
-    who = standup.remaining.map((user) -> user.name).join(', ')
+    who = standup.remaining.map((user) -> "@#{user.name}").join(', ')
     msg.send "Ok, let's start the standup: #{who}"
     nextPerson msg
 
@@ -74,7 +74,7 @@ module.exports = (robot) ->
       delete robot.brain.data.standup[room]
     else
       standup.current = standup.remaining.shift()
-      msg.send "#{standup.current.name}: You're up"
+      msg.send "@#{standup.current.name}: You're up"
 
 calcMinutes = (milliseconds) ->
   seconds = Math.floor(milliseconds / 1000)
