@@ -36,11 +36,17 @@ module.exports = (robot) ->
       started: false,
     }
 
-    msg.send "@channel Starting a standup in 60 seconds! Please say something to join."
+    getUsersForChannel room, (err, users) ->
+      if err
+        console.log "Error getting users: #{err}"
+        users = ["channel"]
 
-    setTimeout ->
-      startStandup msg
-    , 60000
+      who = users.map((user) -> "@#{user}").join(', ')
+      msg.send "#{who} Starting a standup in 60 seconds! Please say something to join."
+
+      setTimeout ->
+        startStandup msg
+      , 60000
 
   robot.respond /next$/i, (msg) ->
     standup = robot.brain.data.standup?[msg.message.room]
@@ -76,6 +82,49 @@ module.exports = (robot) ->
       standup.current = standup.remaining.shift()
       msg.send "@#{standup.current.name}: You're up"
 
+  getUsersForChannel = (channelName, callback) ->
+    apiToken = process.env.HUBOT_SLACK_API_TOKEN
+    return callback(new Error("No API key")) if !apiToken
+    channelId = robot.adapter.channelMapping?[channelName]
+    return callback(new Error("No channel mapping")) if !channelId
+    console.log "Fetching channels.info for #{channelId}"
+    robot.http("https://slack.com/api/channels.info")
+      .query({
+        token: apiToken
+        channel: channelId
+      })
+      .get() (err, res, body) ->
+        if err
+          console.log "Error getting channels: #{err}"
+          return callback(err)
+        channel = JSON.parse(body)?.channel
+        if !channel
+          return callback(true)
+        userIdToNameMapping (err, map) ->
+          return callback(err) if err
+          callback null, (map[member] for member in channel.members)
+
+  userIdToNameMapping = (callback) ->
+    getAllUsers (err, members) ->
+      return callback(err) if err
+      map = {}
+      for member in members
+        map[member.id] = member.name
+      callback null, map
+
+  getAllUsers = (callback) ->
+    apiToken = process.env.HUBOT_SLACK_API_TOKEN
+    return callback(new Error("No API key")) if !apiToken
+    console.log "Fetching users.list"
+    robot.http("https://slack.com/api/users.list")
+      .query(token: apiToken)
+      .get() (err, res, body) ->
+        if err
+          console.log "Error getting users: #{err}"
+          return callback(err)
+        callback null, JSON.parse(body)?.members
+
+
 calcMinutes = (milliseconds) ->
   seconds = Math.floor(milliseconds / 1000)
   if seconds > 60
@@ -84,3 +133,4 @@ calcMinutes = (milliseconds) ->
     "#{minutes} minutes and #{seconds} seconds"
   else
     "#{seconds} seconds"
+
