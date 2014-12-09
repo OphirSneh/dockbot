@@ -85,13 +85,13 @@ module.exports = (robot) ->
   getUsersForChannel = (channelName, callback) ->
     apiToken = process.env.HUBOT_SLACK_API_TOKEN
     return callback(new Error("No API key")) if !apiToken
-    channelId = robot.adapter.channelMapping?[channelName]
-    return callback(new Error("No channel mapping")) if !channelId
-    robot.logger.debug "Fetching channels.info for #{channelId}"
+    channel = robot.adapter.client.getChannelByName(channelName)
+    return callback(new Error("Channel could not be found")) if !channel
+    robot.logger.debug "Fetching channels.info for #{channel.id}"
     robot.http("https://slack.com/api/channels.info")
       .query({
         token: apiToken
-        channel: channelId
+        channel: channel.id
       })
       .get() (err, res, body) ->
         if err
