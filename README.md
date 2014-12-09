@@ -30,6 +30,18 @@ Then you can interact with hubot by typing `hubot help`.
     ...
 
 
+### Testing on Slack
+
+If you want to test against an actual Slack server, you need to get two API tokens.
+
+First, you need a token for the bot. [Create a hubot on the services page](http://my.slack.com/services/new/hubot), giving it a unique name like "slackbot-test-bfirsh".
+
+Second, you need a full API token for a user. This is for the standup bot to be able to get a list of users in a channel. Go to the [Slack web API page](https://api.slack.com/web) and click "Create token".
+
+Then run hubot with the API token in the service:
+
+    % fig run -e HUBOT_SLACK_TOKEN=<BOT TOKEN> HUBOT_SLACK_API_TOKEN=<USER TOKEN> hubot bin/hubot -a slack
+
 ### Scripting
 
 Take a look at the scripts in the `./scripts` folder for examples.

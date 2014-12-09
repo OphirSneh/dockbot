@@ -38,7 +38,7 @@ module.exports = (robot) ->
 
     getUsersForChannel room, (err, users) ->
       if err
-        console.log "Error getting users: #{err}"
+        robot.logger.error "Error getting users: #{err}"
         users = ["channel"]
 
       who = users.map((user) -> "@#{user}").join(', ')
@@ -85,17 +85,16 @@ module.exports = (robot) ->
   getUsersForChannel = (channelName, callback) ->
     apiToken = process.env.HUBOT_SLACK_API_TOKEN
     return callback(new Error("No API key")) if !apiToken
-    channelId = robot.adapter.channelMapping?[channelName]
-    return callback(new Error("No channel mapping")) if !channelId
-    console.log "Fetching channels.info for #{channelId}"
+    channel = robot.adapter.client.getChannelByName(channelName)
+    return callback(new Error("Channel could not be found")) if !channel
+    robot.logger.debug "Fetching channels.info for #{channel.id}"
     robot.http("https://slack.com/api/channels.info")
       .query({
         token: apiToken
-        channel: channelId
+        channel: channel.id
       })
       .get() (err, res, body) ->
         if err
-          console.log "Error getting channels: #{err}"
           return callback(err)
         channel = JSON.parse(body)?.channel
         if !channel
@@ -115,12 +114,11 @@ module.exports = (robot) ->
   getAllUsers = (callback) ->
     apiToken = process.env.HUBOT_SLACK_API_TOKEN
     return callback(new Error("No API key")) if !apiToken
-    console.log "Fetching users.list"
+    robot.logger.debug "Fetching users.list"
     robot.http("https://slack.com/api/users.list")
       .query(token: apiToken)
       .get() (err, res, body) ->
         if err
-          console.log "Error getting users: #{err}"
           return callback(err)
         callback null, JSON.parse(body)?.members
 
@@ -133,4 +131,3 @@ calcMinutes = (milliseconds) ->
     "#{minutes} minutes and #{seconds} seconds"
   else
     "#{seconds} seconds"
-
