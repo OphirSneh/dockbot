@@ -40,7 +40,7 @@ Second, you need a full API token for a user. This is for the standup bot to be 
 
 Then run hubot with the API token in the service:
 
-    % fig run -e HUBOT_SLACK_TOKEN=<BOT TOKEN> HUBOT_SLACK_API_TOKEN=<USER TOKEN> hubot bin/hubot -a slack
+    % fig run -e HUBOT_SLACK_TOKEN=<BOT TOKEN> -e HUBOT_SLACK_API_TOKEN=<USER TOKEN> hubot bin/hubot -a slack
 
 ### Scripting
 
