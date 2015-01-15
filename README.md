@@ -1,4 +1,6 @@
-# Hubot
+# Dockbot
+
+[![wercker status](https://app.wercker.com/status/dcd7399299bb84e76979deca81089a48/m "wercker status")](https://app.wercker.com/project/bykey/dcd7399299bb84e76979deca81089a48)
 
 This is a version of GitHub's Campfire bot, hubot. He's pretty cool.
 
