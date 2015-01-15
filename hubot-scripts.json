@@ -1,5 +1,6 @@
 [
   "botsnack.coffee",
   "redis-brain.coffee",
-  "shipit.coffee"
+  "shipit.coffee",
+  "yelp.coffee"
 ]
