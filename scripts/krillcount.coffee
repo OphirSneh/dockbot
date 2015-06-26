@@ -13,7 +13,7 @@ module.exports = (robot) ->
   get_username = (response) ->
     "@#{response.message.user.name}"
 
-  robot.hear /@?([\w .\-]+)\?* \bkrilling it\b/i, (msg) ->
+  robot.hear /@?([\w .\-]+)\?* (\bkrilling it\b|\+\+)/i, (msg) ->
     username = msg.match[1]
     userExists username, (exists) ->
       if exists
@@ -29,7 +29,7 @@ module.exports = (robot) ->
       else
         msg.send "No user '#{username}' found"
 
-  robot.hear /@?([\w .\-]+)\?* \bdropped the krill\b/i, (msg) ->
+  robot.hear /@?([\w .\-]+)\?* (\bdropped the krill\b|\-\-)/i, (msg) ->
     username = msg.match[1]
     userExists username, (exists) ->
       if exists
