@@ -12,12 +12,13 @@ module.exports = (robot) ->
 
   request = require('superagent')
 
-  robot.respond /\bdeploy\b ?([^\s .\-]+)\?* :?([^\s .\-]+)\?*$/i, (msg) ->
-    repo = msg.match[1]
-    tag = msg.match[2]
+  robot.respond /\bdeploy\b ?([\w .\-]+)*\/?([\w .\- .^\s]+)*:?([\w .\-]+)$/i, (msg) ->
+  	namespace = msg.match[1]
+    repo_name = msg.match[2]
+    tag = msg.match[3]
     msg.send "#{repo} :: #{tag}"
 
-    request.post('/url').send("{repo: '#{repo}'}").send("{tag: '#{tag}'}").end (err, res) ->
+    request.post('/url').send("{namespace: '#{namespace}'}").send("{repo_name: '#{repo_name}'}").send("{tag: '#{tag}'}").end (err, res) ->
   	if err
     	msg.send "#{err}"
   	else
